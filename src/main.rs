@@ -1,10 +1,13 @@
 use std::result::Result;
 use std::io::{Error, ErrorKind};
 
+fn main() {
+    println!("Hello DNS");
+}
 //DNSPacketBuffer is the representation of a DNS Packet
 pub struct DNSPacketBuffer {
-    buffer: [0;512],
-    position: usize
+    buffer: [u8;512],
+    position: usize,
 }
 
 impl DNSPacketBuffer {
@@ -40,6 +43,6 @@ impl DNSPacketBuffer {
         }
         let response = self.buffer[self.position];
         self.position += 1;
-        Ok(resoponse)
+        Ok(response)
     }
 }
