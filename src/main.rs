@@ -1,4 +1,4 @@
-use std::result::Result;
+use std::io::Result;
 use std::io::{Error, ErrorKind};
 
 fn main() {
@@ -45,4 +45,12 @@ impl DNSPacketBuffer {
         self.position += 1;
         Ok(response)
     }
-}
+
+    fn get(&mut self, pos: usize) ->Result<u8>{
+        if pos > 512 {
+            return Err(Error::new(ErrorKind::InvalidInput, "End of buffer"));
+        };
+        Ok(self.buffer[pos])
+
+    }
+} 
