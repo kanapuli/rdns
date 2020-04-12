@@ -1,3 +1,6 @@
+use std::result::Result;
+use std::io::{Error, ErrorKind};
+
 //DNSPacketBuffer is the representation of a DNS Packet
 pub struct DNSPacketBuffer {
     buffer: [0;512],
@@ -19,14 +22,24 @@ impl DNSPacketBuffer {
         self.position
     }
 
-    fn step(&self , step: usize) -> Result<()> {
+    fn step(&mut self , step: usize) -> Result<()> {
         //ToDo: Check if the position exceeds greater than 512 bytes
         self.position += step;
         Ok(())
     }
 
-    fn seek(&self, seek: usize) -> Result<()> {
+    fn seek(&mut self, seek: usize) -> Result<()> {
         self.position = seek;
         Ok(())
+    }
+
+    //read reads a single byte from  the PacketBuffer
+    fn read(&mut self) -> Result<u8> {
+        if self.position > 512 {
+            return Err(Error::new(ErrorKind::InvalidInput, "End of buffer"));
+        }
+        let response = self.buffer[self.position];
+        self.position += 1;
+        Ok(resoponse)
     }
 }
