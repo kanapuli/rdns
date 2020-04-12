@@ -13,4 +13,9 @@ impl DNSPacketBuffer {
             position: 0
         }
     }
+
+    //position gives the current postion in the buffer
+    fn position(&self) -> usize {
+        self.position
+    }
 }
