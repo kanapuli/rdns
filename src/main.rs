@@ -53,4 +53,12 @@ impl DNSPacketBuffer {
         Ok(self.buffer[pos])
 
     }
+
+    fn get_range(&mut self, start: usize, len: usize) -> Result<&[u8]> {
+        if start + len >  512 {
+            return Err(Error::new(ErrorKind::InvalidInput, "End of buffer"));
+        };
+        Ok(&self.buffer[start..len + start as usize])
+
+    }
 } 
