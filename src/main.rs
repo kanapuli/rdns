@@ -61,4 +61,9 @@ impl DNSPacketBuffer {
         Ok(&self.buffer[start..len + start as usize])
 
     }
+
+    fn read_u16(&mut self) -> Result<u16> {
+        let response = (self.read()? as u16) << 8 | self.read()? as u16; 
+        Ok(response)
+    }
 } 
