@@ -18,4 +18,11 @@ impl DNSPacketBuffer {
     fn position(&self) -> usize {
         self.position
     }
+
+    fn step(&self , step: usize) -> Result<()> {
+        //ToDo: Check if the position exceeds greater than 512 bytes
+        self.position += step;
+        Ok(())
+    }
+
 }
