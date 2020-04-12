@@ -25,4 +25,8 @@ impl DNSPacketBuffer {
         Ok(())
     }
 
+    fn seek(&self, seek: usize) -> Result<()> {
+        self.position = seek;
+        Ok(())
+    }
 }
