@@ -74,4 +74,21 @@ impl DNSPacketBuffer {
                        ((self.read()? as u32) ) ;
         Ok(response)
     }
+
+    //read_qname reads the domain name from the DNS packet buffer
+    fn read_qname(&mut self, outstr: &mut String) -> Result<()> {
+        let mut pos = self.position();
+        let mut jumped =    false;
+
+        let mut delimiter = "";
+        loop {
+            let len = self.get(pos)?;
+
+            if (len & 0xC0) == 0xC0 {
+                if !jumped {
+                    self.seek(pos+2)?;
+                }
+            }
+        }
+    }
 } 
