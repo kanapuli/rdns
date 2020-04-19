@@ -74,20 +74,58 @@ impl DNSPacketBuffer {
 
     //read_qname reads the domain name from the DNS packet buffer
     fn read_qname(&mut self, outstr: &mut String) -> Result<()> {
+        //reading_qname includes jump. Hence keep a local copy of position as opposed
+        //to using the position within the struct.
         let mut pos = self.position();
+        //to track if we have jumped or not
         let mut jumped = false;
 
+        //delimiter to be appended for each label.
         let mut delimiter = "";
         loop {
             let len = self.get(pos)?;
 
-            //if len has the two most significant bits set,  it representsa jump to some other
+            //if len has the two most significant bits set,
+            //it represents a jump to some other
             //offset in the packet
+            //nice way to check if the first 2 significant bits are set
             if (len & 0xC0) == 0xC0 {
+                //update the buffer position to a point past the current label
                 if !jumped {
                     self.seek(pos + 2)?;
                 }
+
+                //read another byte,calculate offset and jump position
+                //by updating the local position variable
+                let b2 = self.get(pos + 1)? as u16;
+                let offset = (((len as u16) ^ 0xC0) << 8) | b2;
+                pos = offset as usize;
+
+                //Indicate that the jump has been performed
+                jumped = true;
+            } else {
+                //move a single byte forward
+                pos += 1;
+                //Domain names terminated with an empty label of length 0 so if
+                //the length is zero, the task is done
+                if len == 0 {
+                    break;
+                }
+                //append the delimiter to our output buffer first
+                outstr.push_str(delimiter);
+
+                //Extract the actual ASCII bytes and append them to outstr
+                let str_buffer = self.get_range(pos, len as usize)?;
+                outstr.push_str(&String::from_utf8_lossy(str_buffer).to_lowercase());
+                delimiter = ".";
+                pos += len as usize;
             }
         }
+        //If a jump has been performed, we have already modified the buffer state
+        //and should not do again
+        if !jumped {
+            self.seek(pos)?;
+        }
+        Ok(())
     }
 }
