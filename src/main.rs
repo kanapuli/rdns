@@ -4,6 +4,16 @@ use std::io::{Error, ErrorKind};
 fn main() {
     println!("Hello DNS");
 }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ResponseCode {
+    NOERROR = 0,
+    FORMERR = 1,
+    SERVFAIL = 2,
+    NXDOMAIN = 3,
+    NOTIMP = 4,
+    REFUSED = 5,
+}
 //DNSPacketBuffer is the representation of a DNS Packet
 pub struct DNSPacketBuffer {
     buffer: [u8; 512],
