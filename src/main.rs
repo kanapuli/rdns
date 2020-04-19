@@ -14,6 +14,19 @@ pub enum ResponseCode {
     NOTIMP = 4,
     REFUSED = 5,
 }
+
+impl ResponseCode {
+    pub fn from_number(code: u8) -> ResponseCode {
+        match code {
+            1 => ResponseCode::FORMERR,
+            2 => ResponseCode::SERVFAIL,
+            3 => ResponseCode::NXDOMAIN,
+            4 => ResponseCode::NOTIMP,
+            5 => ResponseCode::REFUSED,
+            0 | _ => ResponseCode::NOERROR,
+        }
+    }
+}
 //DNSPacketBuffer is the representation of a DNS Packet
 pub struct DNSPacketBuffer {
     buffer: [u8; 512],
