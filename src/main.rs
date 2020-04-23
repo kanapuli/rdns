@@ -152,3 +152,25 @@ impl DNSPacketBuffer {
         Ok(())
     }
 }
+
+#[derive(Debug,Clone)]
+pub struct DnsHeader {
+    pub id: u16, //unique id present on dns request/ response
+    pub recursion_desired: bool,// 1 bit
+    pub truncated_message: bool,// 1 bit
+    pub authoritative_answer: bool,// 1 bit
+    pub opcode: u8, //4 bits
+    pub response: bool, // 1 bit
+    pub rescode: ResponseCode,
+    pub checking_disabled: bool, //1 bit
+    pub authed_data: bool , //1 bit
+    pub z: bool, // 1 bit
+    pub recursion_available: bool, // 1 bit
+
+    pub questions: u16, //16 bit
+    pub answers: u16, //16 bit
+    pub authoritative_entries: u16, //16 bit
+    pub resource_entries: u16 //16 bits
+
+
+}
